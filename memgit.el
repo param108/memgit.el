@@ -6,8 +6,8 @@
 ;; Created: May 16, 2025
 ;; Modified: May 16, 2025
 ;; Version: 0.0.1
-;; Keywords: abbrev bib c calendar comm convenience data docs emulations extensions faces files frames games hardware help hypermedia i18n internal languages lisp local maint mail matching mouse multimedia news outlines processes terminals tex tools unix vc wp
-;; Homepage: https://github.com/param108/memgit
+;; Keywords: files, versioning
+;; Homepage: https://github.com/param108/memgit.el
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
@@ -34,6 +34,7 @@ Keys are absolute file paths, and values are version numbers.")
 (define-key memgit-mode-map (kbd "C-c m v") 'memgit-current-version)
 (define-key memgit-mode-map (kbd "C-c m d") 'memgit-current-description)
 (define-key memgit-mode-map (kbd "C-c m s") 'memgit-copy-current-buffer-file-to-numbered-file)
+(define-key memgit-mode-map (kbd "C-c m x") 'memgit-clear-all-versions)
 
 
 (message "loading memgit-setup")
@@ -116,8 +117,7 @@ Returns nil if the path is not found."
     (insert content)))
 
 (define-minor-mode memgit-mode
-  "A minor mode for memgit version tracking.
-When enabled, it initializes the file's version in `memgit-versions` if no entry exists."
+  "A minor mode for memgit version tracking."
   :lighter " MemGit"
   :keymap memgit-mode-map
   :global nil
