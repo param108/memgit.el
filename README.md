@@ -1,4 +1,4 @@
-# memgit.el: An In-Memory Git for Fast Iteration
+# memgit.el: Local-only Git for Fast Iteration
 
 `memgit.el`` is a minor mode for Emacs that provides versioning for files. It allows you to save, load, and manage file versions in a cache directory, enabling fast iteration without messing up your git history.
 
@@ -49,7 +49,7 @@ Keybindings provided by `memgit-mode`:
 + `C-c m p`: Replace the current file with the previous version.
 + `C-c m v`: Display the current internal version number of the file.
 + `C-c m d`: Display the description of the current version.
-+ `C-c m x`: Delete all saved versions of this file.
++ `C-c m x`: Delete all saved versions of this file. (There be dragons here. Those who pass here Ne'er return. and all that.)
 
 ## Setting Up the Cache Directory
 The directory used for the cache directory is stored in the variable 
