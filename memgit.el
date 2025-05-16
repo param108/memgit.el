@@ -116,6 +116,10 @@ Returns nil if the path is not found."
   (with-temp-file file-path
     (insert content)))
 
+(defun memgit-trim-string (str)
+  "Trim whitespace from the beginning and end of STR."
+  (replace-regexp-in-string "\\`[ \t\n]*\\|[ \t\n]*\\'" "" str))
+
 (define-minor-mode memgit-mode
   "A minor mode for memgit version tracking."
   :lighter " MemGit"
@@ -148,7 +152,7 @@ Returns nil if the path is not found."
             (if file-path
                 (let* ((absolute-file-path (expand-file-name file-path))
                        (relative-path (file-relative-name absolute-file-path "/"))
-                       (destination-dir (expand-file-name (file-name-directory relative-path) memgit-cache-dir))
+                       (destination-dir (expand-file-name relative-path memgit-cache-dir))
                        (numbered-filename (let ((n 1))
                                             (while (file-exists-p (expand-file-name (number-to-string n) destination-dir))
                                               (setq n (1+ n)))
@@ -178,12 +182,12 @@ Returns nil if the path is not found."
                          (previous-version (and current-version (1- current-version)))
                          (previous-file (when previous-version
                                           (expand-file-name
-                                           (concat (file-relative-name (file-name-directory absolute-file-path) "/")
+                                           (concat (file-relative-name absolute-file-path "/") "/"
                                                    (number-to-string previous-version))
                                            memgit-cache-dir)))
                          (previous-description (when previous-version
                                                  (expand-file-name
-                                                  (concat (file-relative-name (file-name-directory absolute-file-path) "/")
+                                                  (concat (file-relative-name absolute-file-path "/") "/"
                                                           (concat (number-to-string previous-version) ".desc"))
                                                   memgit-cache-dir))))
                     (if (and previous-version (file-exists-p previous-file))
@@ -211,12 +215,12 @@ Returns nil if the path is not found."
                          (next-version (and current-version (1+ current-version)))
                          (next-file (when next-version
                                       (expand-file-name
-                                       (concat (file-relative-name (file-name-directory absolute-file-path) "/")
+                                       (concat (file-relative-name absolute-file-path "/") "/"
                                                (number-to-string next-version))
                                        memgit-cache-dir)))
                          (next-description (when next-version
                                              (expand-file-name
-                                              (concat (file-relative-name (file-name-directory absolute-file-path) "/")
+                                              (concat (file-relative-name absolute-file-path "/") "/"
                                                       (concat (number-to-string next-version) ".desc"))
                                               memgit-cache-dir))))
                     (if (and next-version (file-exists-p next-file))
@@ -239,10 +243,11 @@ Return t if differences are found, nil otherwise."
           (let ((file-path (buffer-file-name)))
             (if file-path
                 (let* ((absolute-file-path (expand-file-name file-path))
-                       (current-version (memgit-get-version absolute-file-path))
+                       (current-version (when absolute-file-path
+                                          (memgit-get-version absolute-file-path)))
                        (latest-file (when current-version
                                       (expand-file-name
-                                       (concat (file-relative-name (file-name-directory absolute-file-path) "/")
+                                       (concat (file-relative-name absolute-file-path "/") "/"
                                                (number-to-string current-version))
                                        memgit-cache-dir))))
                   (if (and current-version (file-exists-p latest-file))
@@ -257,7 +262,8 @@ Return t if differences are found, nil otherwise."
                           (message "No differences found between buffer and latest version.")
                           nil))
                     (progn
-                      (message "No latest version found for: %s" absolute-file-path)
+                      (message "No latest version found for: %s %s %s"
+                               absolute-file-path, latest-file, current-version)
                       t)))
               (progn
                 (message "Current buffer is not visiting a file.")
@@ -270,7 +276,7 @@ Return t if differences are found, nil otherwise."
             (if file-path
                 (let* ((absolute-file-path (expand-file-name file-path))
                        (relative-path (file-relative-name absolute-file-path "/"))
-                       (version-dir (expand-file-name (file-name-directory relative-path) memgit-cache-dir)))
+                       (version-dir (expand-file-name relative-path memgit-cache-dir)))
                   (if (file-directory-p version-dir)
                       (progn
                         (delete-directory version-dir t)
