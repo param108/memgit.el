@@ -1,6 +1,6 @@
 # memgit.el: Local-only Git for Fast Iteration
 
-`memgit.el`` is a minor mode for Emacs that provides versioning for files. It allows you to save, load, and manage file versions in a cache directory, enabling fast iteration without messing up your git history.
+**memgit.el** is a minor mode for Emacs that provides versioning for files. It allows you to save, load, and manage file versions in a cache directory, enabling fast iteration without messing up your git history.
 
 ** Features
 + Save and load file versions in a dedicated cache directory.
