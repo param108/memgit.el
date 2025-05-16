@@ -2,14 +2,14 @@
 
 **memgit.el** is a minor mode for Emacs that provides versioning for files. It allows you to save, load, and manage file versions in a cache directory, enabling fast iteration without messing up your git history.
 
-** Features
+## Features
 + Save and load file versions in a dedicated cache directory.
 + Navigate between previous and next versions of a file.
 + Add descriptions to versions for better context.
 + Clear all versions for a file when needed.
 + Lightweight and easy to use.
 
-** Installation
+## Installation
 
 ### Doom Emacs Configuration
 For Doom Emacs users, add the following to your `~/.config/doom/config.el`:
