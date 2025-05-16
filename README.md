@@ -1,4 +1,4 @@
-*** memgit.el: An In-Memory Git for Fast Iteration
+# memgit.el: An In-Memory Git for Fast Iteration
 
 `memgit.el`` is a minor mode for Emacs that provides versioning for files. It allows you to save, load, and manage file versions in a cache directory, enabling fast iteration without messing up your git history.
 
@@ -11,7 +11,7 @@
 
 ** Installation
 
-*** Doom Emacs Configuration
+### Doom Emacs Configuration
 For Doom Emacs users, add the following to your `~/.config/doom/config.el`:
 ``` emacs-lisp
 (use-package! memgit)
@@ -37,7 +37,7 @@ doom sync
 
 and you should be all set.
 
-** Usage
+## Usage
 To enable `memgit-mode` in a buffer, run:
 ``` emacs-lisp
 M-x memgit-mode
@@ -51,13 +51,13 @@ Keybindings provided by `memgit-mode`:
 + `C-c m d`: Display the description of the current version.
 + `C-c m x`: Delete all saved versions of this file.
 
-** Setting Up the Cache Directory
+## Setting Up the Cache Directory
 The directory used for the cache directory is stored in the variable 
 `memgit-cache-dir` and is set to `~/memgit-cache` by default.
 
-** Contributing
+## Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests on the [GitHub repository](https://github.com/param108/memgit.el).
 
-** License
+## License
 This package is not part of GNU Emacs.
 
