@@ -38,18 +38,18 @@ doom sync
 and you should be all set.
 
 ** Usage
-To enable ~memgit-mode~ in a buffer, run:
+To enable `memgit-mode` in a buffer, run:
 ``` emacs-lisp
 M-x memgit-mode
 ```
 
-Keybindings provided by ~memgit-mode~:
-+ ~C-c m s~: Save the current file as a new version with a description.
-+ ~C-c m n~: Replace the current file with the next version.
-+ ~C-c m p~: Replace the current file with the previous version.
-+ ~C-c m v~: Display the current internal version number of the file.
-+ ~C-c m d~: Display the description of the current version.
-+ ~C-c m x~: Delete all saved versions of this file.
+Keybindings provided by `memgit-mode`:
++ `C-c m s`: Save the current file as a new version with a description.
++ `C-c m n`: Replace the current file with the next version.
++ `C-c m p`: Replace the current file with the previous version.
++ `C-c m v`: Display the current internal version number of the file.
++ `C-c m d`: Display the description of the current version.
++ `C-c m x`: Delete all saved versions of this file.
 
 ** Setting Up the Cache Directory
 The directory used for the cache directory is stored in the variable 
