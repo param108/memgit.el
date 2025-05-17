@@ -20,7 +20,9 @@ For Doom Emacs users, add the following to your `~/.config/doom/config.el`:
 (after! memgit
   (progn
     (memgit-setup)
-    (memgit-load-versions)))
+    (memgit-load-versions)
+    ;; add this line if you want to load it on every file you open
+    (add-hook 'find-file-hook #'memgit-mode)))
 ```
 
 and this to your `~/.config/doom/packages.el`:
@@ -39,7 +41,8 @@ doom sync
 and you should be all set.
 
 ## Usage
-To enable `memgit-mode` in a buffer, run:
+To enable `memgit-mode` in a buffer, 
+(only if you have omitted the `add-hook` line in `config.el`) run:
 ``` emacs-lisp
 M-x memgit-mode
 ```
@@ -50,7 +53,8 @@ Keybindings provided by `memgit-mode`:
 + `C-c m p`: Replace the current file with the previous version.
 + `C-c m v`: Display the current internal version number of the file.
 + `C-c m d`: Display the description of the current version.
-+ `C-c m x`: Delete all saved versions of this file. (There be dragons here. Those who pass here Ne'er return. and all that.)
++ `C-c m x`: Delete all saved versions of this file. 
+             (There be dragons here. Those who pass here Ne'er return. and all that.)
 + `C-c m a`: Show all versions in the minibuffer and switch to version chosen by user
 
 ## Setting Up the Cache Directory
