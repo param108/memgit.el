@@ -5,6 +5,7 @@
 ## Features
 + Save and load file versions in a dedicated cache directory.
 + Navigate between previous and next versions of a file.
++ Select version to switch to with a menu
 + Add descriptions to versions for better context.
 + Clear all versions for a file when needed.
 + Lightweight and easy to use.
@@ -50,6 +51,7 @@ Keybindings provided by `memgit-mode`:
 + `C-c m v`: Display the current internal version number of the file.
 + `C-c m d`: Display the description of the current version.
 + `C-c m x`: Delete all saved versions of this file. (There be dragons here. Those who pass here Ne'er return. and all that.)
++ `C-c m a`: Show all versions in the minibuffer and switch to version chosen by user
 
 ## Setting Up the Cache Directory
 The directory used for the cache directory is stored in the variable 

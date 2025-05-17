@@ -35,6 +35,7 @@ Keys are absolute file paths, and values are version numbers.")
 (define-key memgit-mode-map (kbd "C-c m d") 'memgit-current-description)
 (define-key memgit-mode-map (kbd "C-c m s") 'memgit-copy-current-buffer-file-to-numbered-file)
 (define-key memgit-mode-map (kbd "C-c m x") 'memgit-clear-all-versions)
+(define-key memgit-mode-map (kbd "C-c m a") 'memgit-show-versions)
 
 
 (message "loading memgit-setup")
@@ -116,10 +117,6 @@ Returns nil if the path is not found."
   (with-temp-file file-path
     (insert content)))
 
-(defun memgit-trim-string (str)
-  "Trim whitespace from the beginning and end of STR."
-  (replace-regexp-in-string "\\`[ \t\n]*\\|[ \t\n]*\\'" "" str))
-
 (define-minor-mode memgit-mode
   "A minor mode for memgit version tracking."
   :lighter " MemGit"
@@ -143,6 +140,66 @@ Returns nil if the path is not found."
             (with-temp-file file-path
               (insert (prin1-to-string memgit-versions)))
             (message "Saved memgit-versions to %s" file-path)))
+
+        ;; Define a function to show all versions of the current file
+        ;; in the minibuffer. clicking on the version will replace the
+        ;; current buffer with the version. The versions must be retrieved
+        ;; from the files in the `memgit-cache-dir`.
+        (defun memgit-show-versions ()
+          "Show all versions of the current file in the minibuffer."
+          (interactive)
+          (if (memgit-check-differences)
+              (message "Please save the current file.")
+
+            (let ((file-path (buffer-file-name)))
+              (if file-path
+                  (let* ((absolute-file-path (expand-file-name file-path))
+                         (relative-path (file-relative-name absolute-file-path "/"))
+                         (version-dir (expand-file-name relative-path memgit-cache-dir))
+                         (versions (directory-files version-dir nil "\\`[0-9]+\\'"))
+                         (output (list))
+                         (chosen-version ""))
+                    (if versions
+                        (progn
+                          (dolist (version versions)
+                            (push (concat version
+                                          ": "
+                                          (memgit-read-file
+                                           (expand-file-name
+                                            (concat version ".desc")
+                                            version-dir))) output))
+                          (message "Versions found: %s" (string-join versions "\n"))
+                          (message "output found: %s" (string-join output "\n"))
+                          (setq chosen-version
+                                (car (split-string
+                                      (completing-read "Choose a version: " output nil t)
+                                      ":")))
+                          (if (string= chosen-version "none")
+                              (message "No versions found for: %s" absolute-file-path)
+                            (let ((chosen-version-file
+                                   (expand-file-name
+                                    (concat chosen-version ".desc")
+                                    version-dir)))
+                              (if (file-exists-p chosen-version-file)
+                                  (progn
+                                    ;; Replace the current buffer with the chosen version
+                                    (copy-file
+                                     (expand-file-name
+                                      chosen-version
+                                      version-dir)
+                                     absolute-file-path t)
+                                    ;; Revert the buffer to reflect the changes
+                                    (revert-buffer t t t)
+                                    ;; Update `memgit-versions` with the new version number
+                                    (memgit-set-version absolute-file-path
+                                                        (string-to-number chosen-version)
+                                                        (memgit-read-file  chosen-version-file))
+                                    (memgit-save-versions)
+                                    (message "Replaced with version: %s" chosen-version))
+                                ;; If the file does not exist, show a message
+                                (message "Version %s does not exist." chosen-version-file)))))
+                      (message "No versions found for: %s" absolute-file-path)))
+                (message "Buffer is not visiting a file.")))))
 
         ;; Define functions that are only available in `memgit-mode`
         (defun memgit-copy-current-buffer-file-to-numbered-file (description)
@@ -292,6 +349,7 @@ Return t if differences are found, nil otherwise."
       (fmakunbound 'memgit-check-differences)
       (fmakunbound 'memgit-clear-all-versions)
       (fmakunbound 'memgit-replace-with-next-version)
+      (fmakunbound 'memgit-show-versions)
       (fmakunbound 'memgit-copy-current-buffer-file-to-numbered-file)
       (message "memgit-mode disabled."))))
 
